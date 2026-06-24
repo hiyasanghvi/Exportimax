@@ -18,21 +18,48 @@ export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
+  e.preventDefault()
+  setLoading(true)
 
-    try {
-      // In a real app, you'd send this to an email service
-      console.log('Contact form submitted:', form)
+  try {
+    const response = await fetch('https://formspree.io/f/xzdldooq', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify({
+        type: 'Contact Form',
+        name: form.name,
+        email: form.email,
+        phone: form.phone,
+        subject: form.subject,
+        message: form.message,
+      }),
+    })
+
+    if (response.ok) {
       setSubmitted(true)
-      setForm({ name: '', email: '', phone: '', subject: '', message: '' })
+
+      setForm({
+        name: '',
+        email: '',
+        phone: '',
+        subject: '',
+        message: '',
+      })
+
       setTimeout(() => setSubmitted(false), 5000)
-    } catch (error) {
-      console.error('Error:', error)
-    } finally {
-      setLoading(false)
+    } else {
+      alert('Failed to send message')
     }
+  } catch (error) {
+    console.error(error)
+    alert('Something went wrong')
+  } finally {
+    setLoading(false)
   }
+}
 
   return (
     <div className="min-h-screen bg-background">

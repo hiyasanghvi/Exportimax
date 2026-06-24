@@ -25,14 +25,22 @@ export function ProductInquiryForm({ productId, productName }: { productId?: str
     e.preventDefault()
     setLoading(true)
     try {
-      const response = await fetch('/api/inquiries', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...formData,
-          productId: productId || 'general',
-        }),
-      })
+      const response = await fetch('https://formspree.io/f/xzdldooq', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+  },
+  body: JSON.stringify({
+    product: productName || 'General Inquiry',
+    name: formData.name,
+    email: formData.email,
+    company: formData.company,
+    phone: formData.phone,
+    quantity: formData.quantity,
+    message: formData.message,
+  }),
+})
       if (response.ok) {
         setSubmitted(true)
         setFormData({ name: '', email: '', company: '', phone: '', quantity: '', message: '' })
